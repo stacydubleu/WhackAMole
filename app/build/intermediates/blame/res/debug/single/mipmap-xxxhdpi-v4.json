@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/alisoncheu/Desktop/WhackAMole-master/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi-v4/ic_launcher.png",
+        "source": "/Users/alisoncheu/Desktop/WhackAMole-master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
         "merged": "/Users/Swang/Desktop/WhackAMole/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi-v4/ic_launcher.png",
         "source": "/Users/Swang/Desktop/WhackAMole/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
     }

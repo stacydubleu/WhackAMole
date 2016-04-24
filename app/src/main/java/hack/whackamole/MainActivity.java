@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private ScoreBoard scoreBoard;
     @Override
     protected void onCreate(Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DisplayMetrics metrics = new DisplayMetrics();
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         scoreBoard = new ScoreBoard(this,container);
         hackGrid= new Grid(this,container,scoreBoard);
         hackGrid.buildTiles(screenWidth);
+
         try{
             hackGrid.playGame();
         }

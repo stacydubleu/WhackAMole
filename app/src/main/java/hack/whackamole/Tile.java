@@ -41,7 +41,7 @@ public class Tile extends ImageView {
             if (randomNum == 3) {
                 setImageResource(R.drawable.hillary);
             } else {
-                setImageResource(R.ted);
+                setImageResource(R.drawable.ted);
             }
         }
     }

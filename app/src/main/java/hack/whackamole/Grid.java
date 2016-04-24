@@ -3,6 +3,7 @@ package hack.whackamole;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.os.CountDownTimer;
 import java.util.Random;
@@ -50,17 +51,23 @@ public class Grid {
 
     public void playGame() throws Exception {
         CountDownTimer time = new CountDownTimer(30000,1000) {
-            public void onTick ( long millisUntilFinished){
-                R.id.timer.setText("seconds remaining: " + millisUntilFinished / 1000);
+            public void onTick (long millisUntilFinished){
+               EditText text = (EditText) container.findViewById(R.id.timer);
+               text.setText("seconds remaining: " + millisUntilFinished / 1000);
             }
+
             public void onFinish() {
-                R.id.timer.setText("Time's up!");
+                EditText text = (EditText) container.findViewById(R.id.timer);
+                text.setText("Time's up!");
                 finished=true;
             }
         };
-        R.id.score.setText("Ready?");
-        wait(1000);
-        R.id.score.setText("Go!");
+
+        //FIX
+        EditText edit = (EditText) container.findViewById(R.id.timer);
+        edit.setText("Ready?");
+        wait(2000);
+        edit.setText("Go!");
         time.start();
         while (finished==false){
             Random rand = new Random();
