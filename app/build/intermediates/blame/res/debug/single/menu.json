@@ -1,10 +1,14 @@
 [
     {
+        "merged": "/Users/Swang/Desktop/WhackAMole/app/build/intermediates/res/merged/debug/menu/menu_main.xml",
+        "source": "/Users/Swang/Desktop/WhackAMole/app/src/main/res/menu/menu_main.xml"
+    },
+    {
         "merged": "/Users/alisoncheu/Desktop/WhackAMole-master/app/build/intermediates/res/merged/debug/menu/menu_main.xml",
         "source": "/Users/alisoncheu/Desktop/WhackAMole-master/app/src/main/res/menu/menu_main.xml"
     },
     {
-        "merged": "/Users/Swang/Desktop/WhackAMole/app/build/intermediates/res/merged/debug/menu/menu_main.xml",
-        "source": "/Users/Swang/Desktop/WhackAMole/app/src/main/res/menu/menu_main.xml"
+        "merged": "/Users/louismenacho/Documents/whackamole2/app/build/intermediates/res/merged/debug/menu/menu_main.xml",
+        "source": "/Users/louismenacho/Documents/whackamole2/app/src/main/res/menu/menu_main.xml"
     }
 ]
