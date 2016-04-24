@@ -22,9 +22,13 @@ public class Grid {
     private int squareSize;
     private int player=1;
     private Random rand = new Random();
-    private ArrayList<ArrayList<Tile>> tiles;
 
-    int remainingMoles;
+    private ArrayList<ArrayList<Tile>> tiles;
+    private int timeIntervals = 2000;
+    private int remainingMoles;
+    private String supportingCandidate = "Bernie Sanders";
+    private String opposingCandidate= "Donald Trump";
+
 
     public Grid(Context context, RelativeLayout container, ScoreBoard scoreBoard) {
         this.context = context;
@@ -54,8 +58,17 @@ public class Grid {
         Log.d("test",tiles.get(0).size()+"");
     }
 
+    public void resetTiles(){
+        for (int c = 0; c < COLS; c++) {
+            for (int r = 0; r < ROWS; r++) {
+                tiles.get(c).get(r).isHit();//reset to default
+            }
+        }
+    }
+
     public void placeMoles(){
         int numOfMoles = rand.nextInt(9)+3;
+
         remainingMoles = numOfMoles;
         for (int i = 0; i < numOfMoles; i++) {
             int x = rand.nextInt(COLS);
@@ -65,7 +78,7 @@ public class Grid {
                 continue;
             }
             tiles.get(x).get(y).setTarget(true);
-            tiles.get(x).get(y).updateTile();
+            tiles.get(x).get(y).updateTile(opposingCandidate);
         }
     }
 
@@ -83,6 +96,12 @@ public class Grid {
                } else {
                     EditText text = (EditText) container.findViewById(R.id.timer);
                     text.setText("Seconds Remaining: " + millisUntilFinished / 1000);
+                    timeIntervals -= 1000;
+                    if(timeIntervals == 0){
+                        resetTiles();
+                        placeMoles();
+                        timeIntervals = 2000;
+                    }
                 }
             }
 
@@ -106,9 +125,13 @@ public class Grid {
                     return;
                 }
                 if (tiles.get(x).get(y).getTarget()) {
-                    int candidate=tiles.get(x).get(y).getCandidate();
+                    String candidate=tiles.get(x).get(y).getCandidate();
                     tiles.get(x).get(y).isHit();
-                    scoreBoard.updateScore(player, candidate);
+                    if (candidate == opposingCandidate) {
+                        scoreBoard.updateScore(player, 15);
+                    } else {
+                        scoreBoard.updateScore(player, -15);
+                    }
                     remainingMoles--;
                 }
                 if(remainingMoles == 0) {
