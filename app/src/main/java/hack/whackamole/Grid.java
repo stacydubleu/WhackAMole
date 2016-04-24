@@ -15,12 +15,16 @@ public class Grid {
     RelativeLayout grid;
     ScoreBoard scoreBoard;
 
+    private static boolean start = false;
     private static boolean finished=false;
     private static final int COLS = 4;
     private static final int ROWS = 6;
     private int squareSize;
     private int player=1;
+    private Random rand = new Random();
     private ArrayList<ArrayList<Tile>> tiles;
+
+    int remainingMoles;
 
     public Grid(Context context, RelativeLayout container, ScoreBoard scoreBoard) {
         this.context = context;
@@ -50,6 +54,21 @@ public class Grid {
         Log.d("test",tiles.get(0).size()+"");
     }
 
+    public void placeMoles(){
+        int numOfMoles = rand.nextInt(9)+3;
+        remainingMoles = numOfMoles;
+        for (int i = 0; i < numOfMoles; i++) {
+            int x = rand.nextInt(COLS);
+            int y = rand.nextInt(ROWS);
+            if(tiles.get(x).get(y).getTarget()){
+                i--;
+                continue;
+            }
+            tiles.get(x).get(y).setTarget(true);
+            tiles.get(x).get(y).updateTile();
+        }
+    }
+
     public void playGame() throws Exception {
         CountDownTimer time = new CountDownTimer(33000,1000) {
 
@@ -59,6 +78,8 @@ public class Grid {
                    edit.setText("Ready?");
                } else if( millisUntilFinished > 30000){
                    edit.setText("Go!");
+                   start = true;
+                   placeMoles();
                } else {
                     EditText text = (EditText) container.findViewById(R.id.timer);
                     text.setText("Seconds Remaining: " + millisUntilFinished / 1000);
@@ -72,14 +93,6 @@ public class Grid {
             }
         };
         //FIX
-        while (!finished){
-            Log.d("state1","test");
-            Random rand = new Random();
-            Random rand2= new Random();
-            int row=rand.nextInt(((3-0)+1)+0);
-            int col=rand2.nextInt(((2-0)+1)+0);
-            tiles.get(row).get(col).updateTile();
-        }
         time.start();
 
     }
@@ -89,11 +102,19 @@ public class Grid {
             @Override
             public void onClick(View v) {
                 Log.d("state1", "xCoord: " + x + " yCoord: " + y);
+                if(finished || !start){
+                    return;
+                }
                 if (tiles.get(x).get(y).getTarget()) {
                     int candidate=tiles.get(x).get(y).getCandidate();
                     tiles.get(x).get(y).isHit();
                     scoreBoard.updateScore(player, candidate);
+                    remainingMoles--;
                 }
+                if(remainingMoles == 0) {
+                    Log.d("test","here");
+                    placeMoles();
+                };
             }
         });
     }

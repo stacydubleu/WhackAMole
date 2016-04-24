@@ -1,6 +1,7 @@
 package hack.whackamole;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.widget.ImageView;
 import java.util.Random;
 import hack.whackamole.R;
@@ -22,27 +23,25 @@ public class Tile extends ImageView {
         setImageResource(R.drawable.tile);
     }
 
-    public void updateTile() throws InterruptedException {
-        int delay =(5 + new Random().nextInt(5)) * 1000;
-        wait(delay);
+    public void updateTile() {
         Random rand = new Random();
-        randomNum = rand.nextInt(((4 - 0) + 1) + 0);
-        if (randomNum == 0) {
-            setImageResource(R.drawable.tile);
-            Target = false;
-        } else {
-            Target = true;
+        randomNum = rand.nextInt(4);
+//        if (randomNum == 0) {
+//            setImageResource(R.drawable.tile);
+//            Target = false;
+//        } else {
+//            Target = true;
+            if (randomNum == 0) {
+                setImageResource(R.drawable.bernie_sanders100x100);
+            } else
             if (randomNum == 1) {
-                setImageResource(R.drawable.bernie);
-            }
+                setImageResource(R.drawable.donald_trump100x100);
+            } else
             if (randomNum == 2) {
-                setImageResource(R.drawable.donald);
-            }
-            if (randomNum == 3) {
-                setImageResource(R.drawable.hillary);
+                setImageResource(R.drawable.hilary_clinton100x100);
             } else {
-                setImageResource(R.drawable.ted);
-            }
+                setImageResource(R.drawable.ted_cruz100x100);
+//            }
         }
     }
 
@@ -61,6 +60,9 @@ public class Tile extends ImageView {
 
     public boolean getTarget(){
         return Target;
+    }
+    public void setTarget(boolean b){
+        Target = b;
     }
 
     public int getCandidate(){
