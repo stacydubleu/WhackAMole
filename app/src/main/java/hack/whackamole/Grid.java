@@ -15,12 +15,16 @@ public class Grid {
     RelativeLayout grid;
     ScoreBoard scoreBoard;
 
+    private static boolean start = false;
     private static boolean finished=false;
-    private static final int COLS = 3;
-    private static final int ROWS = 4;
+    private static final int COLS = 4;
+    private static final int ROWS = 6;
     private int squareSize;
     private int player=1;
+    private Random rand = new Random();
     private ArrayList<ArrayList<Tile>> tiles;
+
+    int remainingMoles;
 
     public Grid(Context context, RelativeLayout container, ScoreBoard scoreBoard) {
         this.context = context;
@@ -33,27 +37,53 @@ public class Grid {
     public void buildTiles(int screenWidth) {
         squareSize = getSquareSize(screenWidth);
 
-        for (int c = 0; c < 3; c++) {
-            ArrayList<Tile> rows = new ArrayList<Tile>();
-            for (int r = 0; r < 4; r++) {
+        for (int c = 0; c < COLS; c++) {
+            tiles.add(new ArrayList<Tile>());
+            for (int r = 0; r < ROWS; r++) {
                 int xCo = getXCoord(c);
-                int yCo = getYCoord(c);
-                rows.add(new Tile(context, c, r));
+                int yCo = getYCoord(r);
+                tiles.get(c).add(new Tile(context,c,r));
                 setOnTouch(c, r);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(squareSize, squareSize);
                 params.leftMargin = xCo;
                 params.topMargin = yCo;
                 grid.addView(tiles.get(c).get(r), params);
             }
-            tiles.add(rows);
+        }
+        Log.d("test",tiles.size()+"");
+        Log.d("test",tiles.get(0).size()+"");
+    }
+
+    public void placeMoles(){
+        int numOfMoles = rand.nextInt(9)+3;
+        remainingMoles = numOfMoles;
+        for (int i = 0; i < numOfMoles; i++) {
+            int x = rand.nextInt(COLS);
+            int y = rand.nextInt(ROWS);
+            if(tiles.get(x).get(y).getTarget()){
+                i--;
+                continue;
+            }
+            tiles.get(x).get(y).setTarget(true);
+            tiles.get(x).get(y).updateTile();
         }
     }
 
     public void playGame() throws Exception {
-        CountDownTimer time = new CountDownTimer(30000,1000) {
+        CountDownTimer time = new CountDownTimer(33000,1000) {
+
             public void onTick (long millisUntilFinished){
-               EditText text = (EditText) container.findViewById(R.id.timer);
-               text.setText("seconds remaining: " + millisUntilFinished / 1000);
+                EditText edit = (EditText) container.findViewById(R.id.timer);
+                if(millisUntilFinished > 31000){
+                   edit.setText("Ready?");
+               } else if( millisUntilFinished > 30000){
+                   edit.setText("Go!");
+                   start = true;
+                   placeMoles();
+               } else {
+                    EditText text = (EditText) container.findViewById(R.id.timer);
+                    text.setText("Seconds Remaining: " + millisUntilFinished / 1000);
+                }
             }
 
             public void onFinish() {
@@ -62,37 +92,35 @@ public class Grid {
                 finished=true;
             }
         };
-
         //FIX
-        EditText edit = (EditText) container.findViewById(R.id.timer);
-        edit.setText("Ready?");
-        wait(2000);
-        edit.setText("Go!");
         time.start();
-        while (finished==false){
-            Random rand = new Random();
-            Random rand2= new Random();
-            int row=rand.nextInt(((3-0)+1)+0);
-            int col=rand2.nextInt(((2-0)+1)+0);
-            tiles.get(row).get(col).updateTile();
-        }
+
     }
+
     private void setOnTouch(final int x, final int y){
         tiles.get(x).get(y).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("state1", "xCoord: " + x + " yCoord: " + y);
+                if(finished || !start){
+                    return;
+                }
                 if (tiles.get(x).get(y).getTarget()) {
                     int candidate=tiles.get(x).get(y).getCandidate();
                     tiles.get(x).get(y).isHit();
                     scoreBoard.updateScore(player, candidate);
+                    remainingMoles--;
                 }
+                if(remainingMoles == 0) {
+                    Log.d("test","here");
+                    placeMoles();
+                };
             }
         });
     }
 
     private int getSquareSize(final int width) {
-        return width / 12;
+        return width / COLS;
     }
 
     private int getXCoord(final int x) {
